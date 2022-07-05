@@ -9,16 +9,15 @@
 #
 
 oneTimeSetUp() {
-  #mkdir -p "${TARGET_TESTS_DIR}"
-  #randstr="$(tr -dc '[:alnum:]' </dev/urandom | dd count=1 bs=16 2>/dev/null)"
-  #TMP_SOURCE_FILE="${TARGET_TESTS_DIR}/TMP_SOURCE_FILE.${randstr}"
+  mkdir -p "${TARGET_TESTS_DIR}"
+  randstr="$(tr -dc '[:alnum:]' </dev/urandom | dd count=1 bs=16 2>/dev/null)"
+  TMP_SOURCE_FILE="${TARGET_TESTS_DIR}/TMP_SOURCE_FILE.${randstr}"
   #
   # It's a grep pattern not an expression.
   # shellcheck disable=SC2016
   #
-  #grep -v '^\(main "${@}"$\|#!\)' "${EXTENSION}" 1>"${TMP_SOURCE_FILE}"
-  #source "${TMP_SOURCE_FILE}"
-  source <(grep -v '^\(main "${@}"$\|#!\)' "${EXTENSION}")
+  grep -v '^\(main "${@}"$\|#!\)' "${EXTENSION}" 1>"${TMP_SOURCE_FILE}"
+  source "${TMP_SOURCE_FILE}"
   export PROGRAM="pass"
   export COMMAND="context"
 }
