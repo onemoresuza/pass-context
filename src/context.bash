@@ -14,7 +14,8 @@
 # shellcheck source=/dev/null
 #
 
-CONTEXTS_FILE="${PASSWORD_CONTEXTS_FILE:-"${XDG_CONFIG_HOME}/pass/extensions/contexts.cfg"}"
+PASS_CFG_DIR="${XDG_CONFIG_HOME:-"${HOME}/.config"}/pass/extensions"
+CONTEXTS_FILE="${PASSWORD_CONTEXTS_FILE:-"${PASS_CFG_DIR}/contexts.cfg"}"
 XMENU="${PASSWORD_CONTEXTS_XMENU:-dmenu}"
 XMENU_FLAGS="${PASSWORD_CONTEXTS_XMENU_FLAGS}"
 
@@ -93,7 +94,8 @@ get_context() {
 main() {
   sopts="hqc:C:v:"
   lopts="help,quiet,change-to:,config:,variable:"
-  argv="$(POSIXLY_CORRECT=1 getopt -l "${lopts}" -o "${sopts}" -- "${@}" 2>&1)" || {
+  argv="$(POSIXLY_CORRECT=1 getopt \
+    -l "${lopts}" -o "${sopts}" -- "${@}" 2>&1)" || {
     argv="${argv%[[:space:]]*}"
     argv="${argv%%[[:cntrl:]]*}"
     rperr "${argv#*[[:space:]]}"
@@ -119,7 +121,7 @@ main() {
         [[ "${1}" =~ ^[^[:digit:]][[:alnum:]]*=.*$ ]] || {
           rperr "Invalid format for -v/--variable.\n"
           rperr "Format is \"var=value\", being \"var\" a mostly alphanumeric\n"
-          rperr "string (it can contain a '_') that does not start with a number."
+          rperr "string ('_' is allowed) that does not start with a number."
           exit 1
         }
         ((args["vars_count"] += 1))
