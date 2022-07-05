@@ -39,8 +39,8 @@ rperr() {
 }
 
 main() {
-  sopts="hqCc:v:"
-  lopts="help,quiet,current,config:,variable:"
+  sopts="hqc:C:v:"
+  lopts="help,quiet,change-to:,config:,variable:"
   argv="$(getopt -l "${lopts}" -o "${sopts}" -- "${@}" 2>&1)" || {
     argv="${argv%[[:space:]]*}"
     argv="${argv%%[[:cntrl:]]*}"
