@@ -114,6 +114,13 @@ main() {
     shift
   done
 
+  if [ -n "${args["context"]}" ]; then
+    [ -r "${CONTEXTS_FILE}" ] || {
+      rperr "Couldn't read context file: \"%s\"" "${CONTEXTS_FILE}"
+      exit 1
+    }
+  fi
+
 }
 
 main "${@}"
