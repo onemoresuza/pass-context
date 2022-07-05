@@ -6,7 +6,7 @@ TESTS_DIR := tests
 B := \033[1m
 N := \033[m
 
-.PHONY: all test test-rperr test-get_context lint
+.PHONY: all test test-get_context lint
 
 all:
 	@printf "Available Targets:\n\n"
@@ -14,7 +14,7 @@ all:
 	@printf "$(B)lint$(N):\t\t\tlint the extension script.\n"
 	@printf "$(B)test-get_context$(N):\trun the tests for the \"get_context()\" function.\n"
 
-test: lint test-rperr test-get_context
+test: lint test-get_context
 
 lint:
 	shellcheck $(EXTENSION)
