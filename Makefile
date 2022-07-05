@@ -1,5 +1,7 @@
 SHELL := /usr/bin/env bash
 EXTENSION := src/context.bash
+TARGET_DIR := target
+TARGET_TESTS_DIR := $(TARGET_DIR)/tests
 TESTS_DIR := tests
 B := \033[1m
 N := \033[m
@@ -21,7 +23,9 @@ lint:
 	shfmt -i 2 -bn -ci -d $(EXTENSION)
 
 test-rperr:
-	EXTENSION=$(EXTENSION) $(SHELL) $(TESTS_DIR)/rperr.bash
+	TARGET_TESTS_DIR=$(TARGET_TESTS_DIR) EXTENSION=$(EXTENSION) \
+			   $(SHELL) $(TESTS_DIR)/rperr.bash
 
 test-get_context:
-	EXTENSION=$(EXTENSION) $(SHELL) $(TESTS_DIR)/get_context.bash
+	TARGET_TESTS_DIR=$(TARGET_TESTS_DIR) EXTENSION=$(EXTENSION) \
+			   $(SHELL) $(TESTS_DIR)/get_context.bash
