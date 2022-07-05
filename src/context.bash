@@ -10,6 +10,9 @@
 # Suppress warnings about globing and word splitting in unquoted variables.
 # shellcheck disable=SC2086
 #
+# Suppress warnings about not being able to follow files.
+# shellcheck source=/dev/null
+#
 
 CONTEXTS_FILE="${PASSWORD_CONTEXTS_FILE:-"${XDG_CONFIG_HOME}/pass/extensions/contexts.cfg"}"
 XMENU="${PASSWORD_CONTEXTS_XMENU:-dmenu}"
@@ -61,6 +64,30 @@ help_msg() {
   -q, --quiet               Suppress context info.
   -h, --help                Print this help message.
 EOF
+}
+
+#
+# Prints to stdout the variables to be sourced.
+# Globals:
+#   CONTEXTS_FILE
+# Arguments:
+#   1: context name.
+# Outputs:
+#   Stdout:
+#     The the variables to be sourced.
+# Returns:
+# 0 on sucess, or 1, when the context is not found.
+#
+get_context() {
+  local variables
+  variables="$(
+    sed "/\[${1}\]/,/\(^$\|\[.*\]\)/!d
+      /^\[.*\]$/d" "${CONTEXTS_FILE}"
+  )"
+
+  [ -z "${variables}" ] && return 1
+
+  printf "%s\n" "${variables}"
 }
 
 main() {
@@ -116,9 +143,18 @@ main() {
 
   if [ -n "${args["context"]}" ]; then
     [ -r "${CONTEXTS_FILE}" ] || {
-      rperr "Couldn't read context file: \"%s\"" "${CONTEXTS_FILE}"
+      rperr "Couldn't read context file: \"%s\".\n" "${CONTEXTS_FILE}"
       exit 1
     }
+
+    local source_content
+    source_content="$(get_context "${args["context"]}")" || {
+      rperr "Context \"%s\" not found in \"%s\".\n" \
+        "${args["context"]}" "${CONTEXTS_FILE}"
+      exit 1
+    }
+
+    source <(printf "%s\n" "${source_content}")
   fi
 
 }
