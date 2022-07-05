@@ -118,7 +118,7 @@ main() {
         ;;
       "-v" | "--variable")
         shift
-        [[ "${1}" =~ ^[^[:digit:]][[:alnum:]]*=.*$ ]] || {
+        [[ "${1}" =~ ^[^[:digit:]][_[:alnum:]]*=.*$ ]] || {
           rperr "Invalid format for -v/--variable.\n"
           rperr "Format is \"var=value\", being \"var\" a mostly alphanumeric\n"
           rperr "string ('_' is allowed) that does not start with a number."
