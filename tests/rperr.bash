@@ -28,6 +28,8 @@ oneTimeTearDown() {
 }
 
 testTty() {
+  ls -lh "${TARGET_TESTS_DIR}"
+  rperr "TEST"
   stderr="$(rperr "Message on a tty" 2>&1)"
   assertTrue " rperr() failed" "${?}"
 
