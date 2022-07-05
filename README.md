@@ -1,6 +1,6 @@
 # pass-context
 
-An easy way to change [Pass's](https://www.passwordstore.org/) contexts.
+An easy way to change [Pass'](https://www.passwordstore.org/) contexts.
 
 # Rationale
 To change contexts, one must use environment variables, at least
