@@ -2,6 +2,8 @@
 
 An easy way to change [Pass'](https://www.passwordstore.org/) contexts.
 
+[![Build Status](https://app.travis-ci.com/onemoresuza/pass-context.svg?branch=main)](https://app.travis-ci.com/onemoresuza/pass-context)
+
 # Rationale
 To change contexts, one must use environment variables, at least
 `PASSWORD_STORE_DIR`. However, there cases in which they are not available, for
