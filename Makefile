@@ -9,7 +9,7 @@ N := \033[m
 all:
 	@printf "Available Targets:\n\n"
 	@printf "$(B)test$(N):\t\t\trun all the \"test-*\" targets.\n"
-	@printf "$(B)test-fmt$(N):\t\trun the tests for the extension formatting.\n"
+	@printf "$(B)lint$(N):\t\t\tlint the extension script.\n"
 	@printf "$(B)test-rperr$(N):\t\trun the tests for the \"rperr()\" function.\n"
 	@printf "$(B)test-get_context$(N):\trun the tests for the \"get_context()\" function.\n"
 
