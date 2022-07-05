@@ -38,15 +38,54 @@ rperr() {
   fi
 }
 
+#
+# Prints the help message to stdout.
+# Globals:
+#   PROGRAM
+#   COMMAND
+#   XMENU
+# Arguments:
+#   NONE
+# Outputs:
+#   Stdout:
+#     The help message.
+#
+help_msg() {
+  cat <<EOF
+  Usage: ${PROGRAM} ${COMMAND} [OPTION]... PASS_CMD [PASS_CMD_OPTION]...
+  Run Pass with the given context.
+
+  -c, --change-to=CONTEXT   Use CONTEXT instead of the current one.
+  -v, --variable=VAR=VALUE  Set value VALUE the variable VAR.
+  -C, --config=PATH         Use the cfg file specified in PATH.
+  -q, --quiet               Suppress context info.
+  -h, --help                Print this help message.
+EOF
+}
+
 main() {
   sopts="hqc:C:v:"
   lopts="help,quiet,change-to:,config:,variable:"
-  argv="$(getopt -l "${lopts}" -o "${sopts}" -- "${@}" 2>&1)" || {
+  argv="$(POSIXLY_CORRECT=1 getopt -l "${lopts}" -o "${sopts}" -- "${@}" 2>&1)" || {
     argv="${argv%[[:space:]]*}"
     argv="${argv%%[[:cntrl:]]*}"
     rperr "${argv#*[[:space:]]}"
     exit 1
   }
+
+  while true; do
+    case "${1}" in
+      "-h" | "--help")
+        help_msg
+        exit 0
+        ;;
+      "--")
+        shift
+        break
+        ;;
+    esac
+    shift
+  done
 
 }
 
