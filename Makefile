@@ -3,6 +3,7 @@ EXTENSION := src/context.bash
 TARGET_DIR := target
 TARGET_TESTS_DIR := $(TARGET_DIR)/tests
 TESTS_DIR := tests
+TESTS_SCRIPTS_DIR := $(TESTS_DIR)/scripts
 B := \033[1m
 N := \033[m
 
@@ -23,4 +24,4 @@ lint:
 
 test-get_context:
 	TARGET_TESTS_DIR=$(TARGET_TESTS_DIR) EXTENSION=$(EXTENSION) \
-			   $(SHELL) $(TESTS_DIR)/get_context.bash
+			   $(SHELL) $(TESTS_SCRIPTS_DIR)/get_context.bash
