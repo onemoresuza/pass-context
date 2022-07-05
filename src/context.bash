@@ -124,8 +124,8 @@ main() {
           rperr "string ('_' is allowed) that does not start with a number."
           exit 1
         }
-        ((args["vars_count"] += 1))
         args["vars", "${args["vars_count"]}"]="${1}"
+        ((args["vars_count"] += 1))
         ;;
       "-q" | "--quiet")
         args["quiet"]=true
@@ -158,6 +158,13 @@ main() {
 
     source <(printf "%s\n" "${source_content}")
   fi
+
+  local i
+  i=0
+  while [ "${i}" -lt "${args["vars_count"]}" ]; do
+    eval "${args["vars", "${i}"]}"
+    ((i++))
+  done
 
 }
 
