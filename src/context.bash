@@ -166,6 +166,7 @@ main() {
     ((i++))
   done
 
+  "${PROGRAM}" "${@}"
 }
 
 main "${@}"
