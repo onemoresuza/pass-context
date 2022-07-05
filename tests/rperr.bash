@@ -17,6 +17,8 @@ oneTimeSetUp() {
   # shellcheck disable=SC2016
   #
   grep -v '^\(main "${@}"$\|#!\)' "${EXTENSION}" 1>"${TMP_SOURCE_FILE}"
+  cat "${TMP_SOURCE_FILE}"
+  exit 22
   source "${TMP_SOURCE_FILE}"
   export PROGRAM="pass"
   export COMMAND="context"
