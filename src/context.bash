@@ -73,8 +73,34 @@ main() {
     exit 1
   }
 
+  eval set -- "${argv}"
+
+  declare -A args
+  args["vars_count"]=0
   while true; do
     case "${1}" in
+      "-c" | "--change-to")
+        shift
+        args["context"]="${1}"
+        ;;
+      "-C" | "--config")
+        shift
+        CONTEXTS_FILE="${1}"
+        ;;
+      "-v" | "--variable")
+        shift
+        [[ "${1}" =~ ^[^[:digit:]][[:alnum:]]*=.*$ ]] || {
+          rperr "Invalid format for -v/--variable.\n"
+          rperr "Format is \"var=value\", being \"var\" a mostly alphanumeric\n"
+          rperr "string (it can contain a '_') that does not start with a number."
+          exit 1
+        }
+        ((args["vars_count"] += 1))
+        args["vars", "${args["vars_count"]}"]="${1}"
+        ;;
+      "-q" | "--quiet")
+        args["quiet"]=true
+        ;;
       "-h" | "--help")
         help_msg
         exit 0
@@ -84,6 +110,7 @@ main() {
         break
         ;;
     esac
+
     shift
   done
 
