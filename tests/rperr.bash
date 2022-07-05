@@ -14,7 +14,7 @@ oneTimeSetUp() {
   # shellcheck disable=SC2016
   #
   source <(grep -v '^\(main "${@}"$\|#!\)' "${EXTENSION}")
-  XMENU="/usr/bin/env false"
+  export XMENU="/usr/bin/env false"
   export PROGRAM="pass"
   export COMMAND="context"
 }
