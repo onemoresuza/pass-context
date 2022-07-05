@@ -9,11 +9,14 @@
 #
 
 oneTimeSetUp() {
+  randstr="$(tr -dc '[:alnum:]' </dev/urandom | dd count=1 bs=16 2>/dev/null)"
+  tmp_source_file="${TMPDIR:-/dev/shm}/tmp_source_file.${randstr}"
   #
   # It's a grep pattern not an expression.
   # shellcheck disable=SC2016
   #
-  source <(grep -v '^\(main "${@}"$\|#!\)' "${EXTENSION}")
+  grep -v '^\(main "${@}"$\|#!\)' "${EXTENSION}" 1>"${tmp_source_file}"
+  source "${tmp_source_file}"
   export XMENU="/usr/bin/env false"
   export PROGRAM="pass"
   export COMMAND="context"
