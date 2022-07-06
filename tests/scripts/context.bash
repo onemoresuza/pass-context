@@ -25,8 +25,9 @@ oneTimeSetUp() {
   export GNUPGHOME="${TARGET_TESTS_DIR}/gnupg"
   install -dm0700 "${GNUPGHOME}"
   gpg2 --yes --batch --pinentry-mode loopback --import "${PGP_KEY}"
-  printf "5\ny\n" \
-    | gpg2 --command-fd 0 --expert --edit-key "${PGP_KEY_ID}" trust
+  local trust_gpg_cmd="${GNUPGHOME}/trust_gpg_cmd"
+  printf "5\ny\n" 1>"${trust_gpg_cmd}"
+  gpg2 --command-file "${trust_gpg_cmd}" --expert --edit-key "${PGP_KEY_ID}" trust
 
   PASS_CMD="$(command -v pass)"
 
