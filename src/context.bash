@@ -159,10 +159,26 @@ main() {
     exit 1
   }
 
-  if [ -n "${args["context"]}" ]; then
+  if [[ -n "${args["context"]}" || "${args["use_xmenu"]}" == true ]]; then
     [ -r "${CONTEXTS_FILE}" ] || {
       rperr "Couldn't read context file: \"%s\".\n" "${CONTEXTS_FILE}"
       exit 1
+    }
+
+    [ "${args["use_xmenu"]}" = true ] && {
+      if ! command -v "${XMENU}" 1>/dev/null 2>&1 && [ ! -x "${XMENU}" ]; then
+        rperr "\"${XMENU}\" not on path or lacks exec permission.\n"
+        exit 1
+      fi
+
+      args["context"]="$(
+        sed '/^\[.*\]$/!d
+          s/\(^\[\|\]$\)//g' "${CONTEXTS_FILE}" \
+          | "${XMENU}" ${XMENU_FLAGS}
+      )" || {
+        rperr "Failed to pick a context from \"%s\".\n" "${XMENU} ${XMENU_FLAGS}"
+        exit 1
+      }
     }
 
     local source_content
@@ -173,11 +189,6 @@ main() {
     }
 
     source <(printf "%s\n" "${source_content}")
-  elif [ "${args["use_xmenu"]}" = true ]; then
-    if ! command -v "${XMENU}" && [ ! -x "${XMENU}" ]; then
-      rperr "\"${XMENU}\" not on path or lacks exec permission.\n"
-      exit 1
-    fi
   fi
 
   local i
