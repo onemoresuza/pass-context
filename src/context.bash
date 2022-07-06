@@ -158,6 +158,11 @@ main() {
     exit 1
   }
 
+  [ "${1}" = "context" ] && {
+    rperr "The extension cannot call itself.\n"
+    exit 1
+  }
+
   if [[ -n "${args["context"]}" || "${args["use_xmenu"]}" == true ]]; then
     [ -r "${CONTEXTS_FILE}" ] || {
       rperr "Couldn't read context file: \"%s\".\n" "${CONTEXTS_FILE}"
