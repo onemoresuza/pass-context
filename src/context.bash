@@ -46,7 +46,6 @@ rperr() {
 # Globals:
 #   PROGRAM
 #   COMMAND
-#   XMENU
 # Arguments:
 #   NONE
 # Outputs:
