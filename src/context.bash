@@ -166,7 +166,7 @@ main() {
     ((i++))
   done
 
-  "${PROGRAM}" "${@}"
+  "${PROGRAM}" "${@}" && exit 0 || exit 1
 }
 
 main "${@}"
