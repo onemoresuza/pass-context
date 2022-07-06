@@ -61,6 +61,9 @@ help_msg() {
   -c, --change-to=CONTEXT   Use CONTEXT instead of the current one.
   -v, --variable=VAR=VALUE  Set value VALUE the variable VAR.
   -C, --config=PATH         Use the cfg file specified in PATH.
+  -x, --use-xmenu           Prompt the user to pick a context with the xmenu.
+  -X, --xmenu=XMENU         Use XMENU as the xmenu program (implies
+                            -x/--use-xmenu).
   -q, --quiet               Suppress context info.
   -h, --help                Print this help message.
 EOF
@@ -92,8 +95,8 @@ get_context() {
 }
 
 main() {
-  sopts="hqc:C:v:"
-  lopts="help,quiet,change-to:,config:,variable:"
+  sopts="hqc:C:v:xX:"
+  lopts="help,quiet,change-to:,config:,variable:,use-xmenu,xmenu:"
   argv="$(POSIXLY_CORRECT=1 getopt \
     -l "${lopts}" -o "${sopts}" -- "${@}" 2>&1)" || {
     argv="${argv%[[:space:]]*}"
@@ -127,6 +130,14 @@ main() {
         args["vars", "${args["vars_count"]}"]="${1}"
         ((args["vars_count"] += 1))
         ;;
+      "-x" | "--use-xmenu")
+        args["use_xmenu"]=true
+        ;;
+      "-X" | "--xmenu")
+        shift
+        XMENU="${1}"
+        args["use_xmenu"]=true
+        ;;
       "-q" | "--quiet")
         args["quiet"]=true
         ;;
@@ -157,6 +168,11 @@ main() {
     }
 
     source <(printf "%s\n" "${source_content}")
+  elif [ "${args["use_xmenu"]}" = true ]; then
+    if ! command -v "${XMENU}" && [ ! -x "${XMENU}" ]; then
+      rperr "\"${XMENU}\" not on path or lacks exec permission.\n"
+      exit 1
+    fi
   fi
 
   local i
