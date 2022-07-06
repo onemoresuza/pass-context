@@ -8,7 +8,14 @@
 # shellcheck source=/dev/null
 #
 
+#
+# Travis-CI does not provide access to a tty, thus some use of Gnupg is unable
+# to tested.
+#
+[ -n "${TRAVIS}" ] && exit 0
+
 oneTimeSetUp() {
+
   unset PASSWORD_STORE_DIR PASSWORD_STORE_KEY PASSWORD_STORE_GPG_OPTS \
     PASSWORD_STORE_X_SELECTION PASSWORD_STORE_UMASK \
     PASSWORD_STORE_GENERATED_LENGTH PASSWORD_STORE_CHARACTER_SET \
