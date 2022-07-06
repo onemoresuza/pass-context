@@ -6,7 +6,10 @@ arch: amd64
 
 before_script:
   - wget -c https://github.com/mvdan/sh/releases/download/v3.5.1/shfmt_v3.5.1_linux_amd64
-  - sudo install -Dm0755 shfmt_v3.5.1_linux_amd64 /usr/local/bin/shfmt
+  - sudo install -Dm0755 -t /usr/local/bin shfmt_v3.5.1_linux_amd64
+  - wget -c https://github.com/koalaman/shellcheck/releases/download/v0.8.0/shellcheck-v0.8.0.linux.aarch64.tar.xz
+  - tar -xJf shellcheck-v0.8.0.linux.aarch64.tar.xz shellcheck-v0.8.0/shellcheck
+  - sudo install -Dm0755 -t /usr/local/bin shellcheck
   - export PATH="${PATH}:/usr/local/bin"
 
 addons:
