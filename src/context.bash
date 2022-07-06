@@ -17,6 +17,7 @@
 CONTEXTS_FILE="${PASSWORD_STORE_CONTEXTS_FILE}"
 XMENU="${PASSWORD_STORE_XMENU:-dmenu}"
 XMENU_FLAGS="${PASSWORD_STORE_XMENU_FLAGS}"
+USE_XMENU=""
 
 #
 # Prints an error message to stderr.
@@ -24,6 +25,7 @@ XMENU_FLAGS="${PASSWORD_STORE_XMENU_FLAGS}"
 #   PROGRAM
 #   COMMAND
 #   XMENU
+#   USE_XMENU
 # Arguments:
 #   1: format string, 2-n: variables for the format string.
 # Outputs:
@@ -33,11 +35,11 @@ XMENU_FLAGS="${PASSWORD_STORE_XMENU_FLAGS}"
 rperr() {
   local fmtstr="${1}"
   shift
-  if tty 1>/dev/null 2>&1; then
-    printf "%s: ${fmtstr}" "${PROGRAM} ${COMMAND}" "${@}" 1>&2
-  else
+  if [ -n "${USE_XMENU}" ]; then
     printf "Exit 1" \
       | "${XMENU}" ${XMENU_FLAGS} -p "$(printf "${fmtstr}" "${@}")"
+  else
+    printf "%s: ${fmtstr}" "${PROGRAM} ${COMMAND}" "${@}" 1>&2
   fi
 }
 
@@ -130,12 +132,12 @@ main() {
         ((args["vars_count"] += 1))
         ;;
       "-x" | "--use-xmenu")
-        args["use_xmenu"]=true
+        USE_XMENU=true
         ;;
       "-X" | "--xmenu")
         shift
         XMENU="${1}"
-        args["use_xmenu"]=true
+        USE_XMENU=true
         ;;
       "-q" | "--quiet")
         args["quiet"]=true
@@ -163,13 +165,13 @@ main() {
     exit 1
   }
 
-  if [[ -n "${args["context"]}" || "${args["use_xmenu"]}" == true ]]; then
+  if [[ -n "${args["context"]}" || "${USE_XMENU}" == true ]]; then
     [ -r "${CONTEXTS_FILE}" ] || {
       rperr "Couldn't read context file: \"%s\".\n" "${CONTEXTS_FILE}"
       exit 1
     }
 
-    [ "${args["use_xmenu"]}" = true ] && {
+    [ "${USE_XMENU}" = true ] && {
       if ! command -v "${XMENU}" 1>/dev/null 2>&1 && [ ! -x "${XMENU}" ]; then
         rperr "\"${XMENU}\" not on path or lacks exec permission.\n"
         exit 1
