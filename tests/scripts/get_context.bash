@@ -39,7 +39,7 @@ testOneContext() {
   printf "%s" "${content}" 1>"${CONTEXTS_FILE}"
 
   assertEquals " Failed to get correct variables:" \
-    "${line1}"$'\n'"${line2}" "$(get_context "${CONTEXT}")"
+    "export ${line1}"$'\n'"export ${line2}" "$(get_context "${CONTEXT}")"
 
   return 0
 }
@@ -58,7 +58,7 @@ testMultContexts() {
   printf "%s" "${content2}" 1>>"${CONTEXTS_FILE}"
 
   assertEquals " Failed to get correct variables:" \
-    "${line1}"$'\n'"${line2}" "$(get_context "${CONTEXT}")"
+    "export ${line1}"$'\n'"export ${line2}" "$(get_context "${CONTEXT}")"
 
   return 0
 }

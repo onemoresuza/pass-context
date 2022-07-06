@@ -14,10 +14,9 @@
 # shellcheck source=/dev/null
 #
 
-PASS_CFG_DIR="${XDG_CONFIG_HOME:-"${HOME}/.config"}/pass/extensions"
-CONTEXTS_FILE="${PASSWORD_CONTEXTS_FILE:-"${PASS_CFG_DIR}/contexts.cfg"}"
-XMENU="${PASSWORD_CONTEXTS_XMENU:-dmenu}"
-XMENU_FLAGS="${PASSWORD_CONTEXTS_XMENU_FLAGS}"
+CONTEXTS_FILE="${PASSWORD_STORE_CONTEXTS_FILE}"
+XMENU="${PASSWORD_STORE_CONTEXTS_XMENU:-dmenu}"
+XMENU_FLAGS="${PASSWORD_STORE_CONTEXTS_XMENU_FLAGS}"
 
 #
 # Prints an error message to stderr.
@@ -83,7 +82,8 @@ get_context() {
   local variables
   variables="$(
     sed "/\[${1}\]/,/\(^$\|\[.*\]\)/!d
-      /^\[.*\]$/d" "${CONTEXTS_FILE}"
+      /^\[.*\]$/d
+      s/^/export /" "${CONTEXTS_FILE}"
   )"
 
   [ -z "${variables}" ] && return 1
@@ -162,7 +162,7 @@ main() {
   local i
   i=0
   while [ "${i}" -lt "${args["vars_count"]}" ]; do
-    eval "${args["vars", "${i}"]}"
+    eval "export ${args["vars", "${i}"]}"
     ((i++))
   done
 
