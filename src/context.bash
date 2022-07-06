@@ -37,7 +37,8 @@ rperr() {
   shift
   if [ -n "${USE_XMENU}" ]; then
     printf "Exit 1" \
-      | "${XMENU}" ${XMENU_FLAGS} -p "$(printf "${fmtstr}" "${@}")"
+      | "${XMENU}" ${XMENU_FLAGS} -p "$(printf "${fmtstr}" "${@}")" \
+        1>/dev/null 2>&1
   else
     printf "%s: ${fmtstr}" "${PROGRAM} ${COMMAND}" "${@}" 1>&2
   fi
