@@ -154,6 +154,11 @@ main() {
     shift
   done
 
+  [ "${#}" -eq 0 ] && {
+    rperr "No Pass command given.\n"
+    exit 1
+  }
+
   if [ -n "${args["context"]}" ]; then
     [ -r "${CONTEXTS_FILE}" ] || {
       rperr "Couldn't read context file: \"%s\".\n" "${CONTEXTS_FILE}"
