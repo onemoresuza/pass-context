@@ -13,3 +13,26 @@ example applications that can launch others, but without a shell (*e. g.*,
 Albeit the main reason, this extension came also to be to facilitate the use of
 different contexts, since today they are usually managed by [shell
 aliases](https://wiki.archlinux.org/title/Pass#Advanced_usage).
+
+# Dependencies
+* Pass
+
+## Optional Dependencies (xmenu support)
+1. [Dmenu](https://tools.suckless.org/dmenu/); or
+2. [Rofi](https://github.com/davatorium/rofi).
+
+## Testing Dependencies
+1. [Shunit2](https://github.com/kward/shunit2);
+2. [Shellcheck](https://github.com/koalaman/shellcheck); and
+3. [Shfmt](https://github.com/mvdan/sh).
+
+# Install
+After downloading the repo, cd into it and run, for the global install:
+```
+# make install
+```
+
+Or, for the local one:
+```
+$ make PREFIX= EXTENSION_DIR="${PASSWORD_STORE_EXTENSIONS_DIR}"
+```
