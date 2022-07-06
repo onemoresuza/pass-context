@@ -85,7 +85,7 @@ get_context() {
   local variables
   variables="$(
     sed "/\[${1}\]/,/\(^$\|\[.*\]\)/!d
-      /^\[.*\]$/d
+      /\(^\[.*\]$\|^$\)/d
       s/^/export /" "${CONTEXTS_FILE}"
   )"
 
