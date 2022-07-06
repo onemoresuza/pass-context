@@ -183,7 +183,8 @@ main() {
           s/\(^\[\|\]$\)//g' "${CONTEXTS_FILE}" \
           | "${XMENU}" ${XMENU_FLAGS}
       )" || {
-        rperr "Failed to pick a context from \"%s\".\n" "${XMENU} ${XMENU_FLAGS}"
+        rperr "Failed to pick a context from \"%s\".\n" \
+          "${XMENU} ${XMENU_FLAGS}"
         exit 1
       }
     }
