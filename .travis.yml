@@ -1,6 +1,5 @@
 language: bash
-dist: xenial
-#virt: lxt
+dist: focal
 virt: vm
 os: linux
 arch: amd64
