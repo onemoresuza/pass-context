@@ -47,8 +47,7 @@ oneTimeTearDown() {
 }
 
 testExtensionsWork() {
-  ls -lh "${PASSWORD_STORE_EXTENSIONS_DIR}"
-  "${PASS_CMD}" context -h
+  "${PASS_CMD}" context -h 1>/dev/null 2>&1
   assertTrue " Extension not recognized" "${?}"
 
   return 0
