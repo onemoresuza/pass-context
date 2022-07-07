@@ -12,7 +12,7 @@
 # Travis-CI does not provide access to a tty, thus some use of Gnupg is unable
 # to tested.
 #
-[ -n "${TRAVIS}" ] && exit 0
+#[ -n "${TRAVIS}" ] && exit 0
 
 oneTimeSetUp() {
 

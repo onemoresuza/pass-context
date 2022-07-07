@@ -1,6 +1,7 @@
 language: bash
 dist: xenial
-virt: lxt
+#virt: lxt
+virt: vm
 os: linux
 arch: amd64
 
