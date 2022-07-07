@@ -19,6 +19,7 @@ addons:
       - shunit2
       - shellcheck
       - gnupg2
+      - pass
 
 script:
   - make test
