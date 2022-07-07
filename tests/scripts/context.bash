@@ -29,7 +29,7 @@ printf "5\ny\n" 1>"${trust_gpg_cmd}"
 gpg2 --command-file "${trust_gpg_cmd}" --expert --edit-key "${PGP_KEY_ID}" trust
 
 PASS_CMD="$(command -v pass)"
-echo $PASS_CMD
+echo PASS_CMD $PASS_CMD
 
 export PASSWORD_STORE_CONTEXTS_FILE="${TARGET_TESTS_DIR}/contexts.cfg"
 CONTEXT1="CONTEXT1"
@@ -90,4 +90,4 @@ testShowPass() {
   return 0
 }
 
-source shunit2
+#source shunit2
