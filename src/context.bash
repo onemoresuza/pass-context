@@ -66,6 +66,7 @@ help_msg() {
   -x, --use-xmenu           Prompt the user to pick a context with the xmenu.
   -X, --xmenu=XMENU         Use XMENU as the xmenu program (implies
                             -x/--use-xmenu).
+  --no-global,              Disable the code in #[Global].
   -q, --quiet               Suppress context info.
   -h, --help                Print this help message.
 EOF
@@ -75,8 +76,8 @@ EOF
 # Prints to stdout the variables to be sourced.
 # Globals:
 #   CONTEXTS_FILE
-# Arguments:
-#   1: context name.
+# Arguments
+#   1: boolean, use or not global code; 2: context name.
 # Outputs:
 #   Stdout:
 #     The the variables to be sourced.
@@ -84,21 +85,31 @@ EOF
 # 0 on sucess, or 1, when the context is not found.
 #
 get_context() {
-  local variables
-  variables="$(
-    sed "/\[${1}\]/,/\(^$\|^\[.*\]$\)/!d
-      /\(^\[.*\]$\|^$\)/d
-      s/^/export /" "${CONTEXTS_FILE}"
-  )"
+  local global_code
+  [[ "${1}" == "true" ]] && {
+    global_code="$(
+      sed "/^#\[Global\]$/,/\(^$\|^#\[.*\]$\)/!d" "${CONTEXTS_FILE}"
+    )"
+  }
 
-  [ -z "${variables}" ] && return 1
+  local local_code
+  [[ "${2}" != "Global" ]] && {
+    local_code="$(
+      sed "/^#\[${2}\]$/,/\(^$\|^#\[.*\]$\)/!d" "${CONTEXTS_FILE}"
+    )"
+  }
+  
+  local source_content
+  source_content="${global_code}"$'\n'"${local_code}"
 
-  printf "%s\n" "${variables}"
+  [[ "${source_content}" == $'\n' ]] && return 1
+
+  printf "%s\n%s\n" "${global_code}" "${local_code}"
 }
 
 main() {
   sopts="hqc:C:v:xX:"
-  lopts="help,quiet,change-to:,config:,variable:,use-xmenu,xmenu:"
+  lopts="help,quiet,change-to:,config:,variable:,use-xmenu,xmenu:,no-global"
   argv="$(POSIXLY_CORRECT=1 getopt \
     -l "${lopts}" -o "${sopts}" -- "${@}" 2>&1)" || {
     argv="${argv%[[:space:]]*}"
@@ -111,6 +122,7 @@ main() {
 
   declare -A args
   args["vars_count"]=0
+  args["global"]=true
   while true; do
     case "${1}" in
       "-c" | "--change-to")
@@ -140,9 +152,8 @@ main() {
         XMENU="${1}"
         USE_XMENU=true
         ;;
-      "-q" | "--quiet")
-        args["quiet"]=true
-        ;;
+      "--no-global") args["global"]=false ;;
+      "-q" | "--quiet") args["quiet"]=true ;;
       "-h" | "--help")
         help_msg
         exit 0
@@ -190,7 +201,7 @@ main() {
     }
 
     local source_content
-    source_content="$(get_context "${args["context"]}")" || {
+    source_content="$(get_context "${args["global"]}" "${args["context"]}")" || {
       rperr "Context \"%s\" not found in \"%s\".\n" \
         "${args["context"]}" "${CONTEXTS_FILE}"
       exit 1
