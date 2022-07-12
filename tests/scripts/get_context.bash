@@ -35,11 +35,14 @@ testOneContext() {
   local content line1 line2
   line1="var1=val1"
   line2="var2=val2"
-  printf -v content "[%s]\n%s\n%s\n" "${CONTEXT}" "${line1}" "${line2}"
+  printf -v content "#[%s]\n%s\n%s" "${CONTEXT}" "${line1}" "${line2}"
   printf "%s" "${content}" 1>"${CONTEXTS_FILE}"
 
+  #
+  # Because of get_context()'s sed script, a '\n' is expected at the beginning.
+  #
   assertEquals " Failed to get correct variables:" \
-    "export ${line1}"$'\n'"export ${line2}" "$(get_context "${CONTEXT}")"
+    $'\n'"${content}" "$(get_context "false" "${CONTEXT}")"
 
   return 0
 }
@@ -48,17 +51,17 @@ testMultContexts() {
   local content line1 line2
   line1="var1=val1"
   line2="var2=val2"
-  printf -v content "[%s]\n%s\n%s\n" "${CONTEXT}" "${line1}" "${line2}"
+  printf -v content "#[%s]\n%s\n%s\n" "${CONTEXT}" "${line1}" "${line2}"
   printf "%s" "${content}" 1>"${CONTEXTS_FILE}"
 
   local content2 line1_1 line2_1
   line1_1="var1=val1"
   line2_1="var2=val2"
-  printf -v content2 "[%s]\n%s\n%s\n" "${CONTEXT}" "${line1_1}" "${line2_1}"
+  printf -v content2 "#[%s]\n%s\n%s\n" "${CONTEXT}" "${line1_1}" "${line2_1}"
   printf "%s" "${content2}" 1>>"${CONTEXTS_FILE}"
 
   assertEquals " Failed to get correct variables:" \
-    "export ${line1}"$'\n'"export ${line2}" "$(get_context "${CONTEXT}")"
+    $'\n'"${content}#[${CONTEXT}]" "$(get_context "false" "${CONTEXT}")"
 
   return 0
 }
