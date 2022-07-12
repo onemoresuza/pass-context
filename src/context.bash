@@ -98,7 +98,7 @@ get_context() {
       sed "/^#\[${2}\]$/,/\(^$\|^#\[.*\]$\)/!d" "${CONTEXTS_FILE}"
     )"
   }
-  
+
   local source_content
   source_content="${global_code}"$'\n'"${local_code}"
 
@@ -189,9 +189,12 @@ main() {
         exit 1
       fi
 
+      local sed_exclude_global
+      [[ "${args["global"]}" = "false" ]] && sed_exclude_global="/Global/d"
       args["context"]="$(
-        sed '/^\[.*\]$/!d
-          s/\(^\[\|\]$\)//g' "${CONTEXTS_FILE}" \
+        sed "/^#\[.*\]$/!d
+          s/\(^#\[\|\]$\)//g
+          ${sed_exclude_global}" "${CONTEXTS_FILE}" \
           | "${XMENU}" ${XMENU_FLAGS}
       )" || {
         rperr "Failed to pick a context from \"%s\".\n" \
@@ -201,7 +204,9 @@ main() {
     }
 
     local source_content
-    source_content="$(get_context "${args["global"]}" "${args["context"]}")" || {
+    source_content="$(
+      get_context "${args["global"]}" "${args["context"]}"
+    )" || {
       rperr "Context \"%s\" not found in \"%s\".\n" \
         "${args["context"]}" "${CONTEXTS_FILE}"
       exit 1
